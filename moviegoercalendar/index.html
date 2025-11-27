@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <title>moviegoerCalendar</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <h1>Moviegoer Calendar</h1>
+
+    <div id="MovieListContainer">
+      <h2>Upcoming Movies</h2>
+      <ul>
+        <li class="MovieItem">Movie 1 - Release Date: 2024-07-15</li>
+        <li class="MovieItem">Movie 2 - Release Date: 2024-08-01</li>
+        <li class="MovieItem">Movie 3 - Release Date: 2024-09-10</li>
+      </ul>
+    </div>
+
+    <div id="CalendarContainer"></div>
+
+    <div id="EventsListContainer">
+      <h2>Upcoming Events</h2>
+            <button id="Showcreateeventform">Add new Event?</button>
+
+      <ul id="eventList"></ul>
+
+      <div id="eventForm" class="hidden">
+        <label class="hidden" for="eventName">Event Name:</label>
+        <input class="hidden" type="text" id="eventName" placeholder="Enter event name">
+        <br>
+        <label class="hidden" for="eventRelease">Event Date:</label>
+        <input class="hidden" type="datetime-local" id="eventRelease">
+        <br>
+        <button class="hidden" id="createEventButton">Add Event</button>
+      </div>
+
+    </div>
+  </body>
+</html>
+
+/!-- In moviegoerCalendar, run npm run dev. For backend, run node --watch server.js --!>
