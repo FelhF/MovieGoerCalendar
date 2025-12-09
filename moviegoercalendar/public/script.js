@@ -34,7 +34,7 @@ async function fetchEvents() {
   const eventsListContainer = document.getElementById('eventList');
 
   try {
-    const response = await fetch('http://localhost:3000/events');
+    const response = await fetch('https://moviegoercalendar.onrender.com/events');
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -61,7 +61,7 @@ async function fetchEvents() {
         if (!confirm(`Delete "${event.name}"?`)) return;
 
         try {
-          const deleteResponse = await fetch(`http://localhost:3000/events/${event.id}`, {
+          const deleteResponse = await fetch(`https://moviegoercalendar.onrender.com/events/${event.id}`, {
             method: 'DELETE'
           });
 
@@ -112,7 +112,7 @@ function toggleEventVisibility() {
 
 async function createEvent(eventData) {                             //POST new event
   try {
-    const response = await fetch('http://localhost:3000/events', {
+    const response = await fetch('https://moviegoercalendar.onrender.com/events', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
