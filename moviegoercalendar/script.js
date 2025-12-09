@@ -29,7 +29,8 @@ function generateCalendar(date) {                                             //
     calendar.appendChild(emptyCell);
   }
 }
-async function fetchEvents() {                                               //GET events
+
+async function fetchEvents() {
   const eventsListContainer = document.getElementById('eventList');
 
   try {
@@ -39,17 +40,42 @@ async function fetchEvents() {                                               //G
     }
 
     const events = await response.json();
-    
-    eventsListContainer.innerHTML = ''; 
+    eventsListContainer.innerHTML = '';
 
     events.forEach(event => {
-      const eventdate = new Date(event.release);  
-      const formattedDate = eventdate.toISOString().split('T')[0];           // Remove time
+      const eventdate = new Date(event.release);
+      const formattedDate = eventdate.toISOString().split('T')[0];
 
       const eventItem = document.createElement('li');
-      eventItem.className = 'EventItem visible';                            //EventList visibility
-      eventItem.textContent = `${event.name}     -------      Date: ${formattedDate}`;
+      eventItem.className = 'EventItem visible';
 
+      const eventText = document.createElement('span');
+      eventText.textContent = `${event.name} ------- Date: ${formattedDate}`;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.textContent = 'Delete';
+
+
+      deleteBtn.addEventListener('click', async () => {
+        if (!confirm(`Delete "${event.name}"?`)) return;
+
+        try {
+          const deleteResponse = await fetch(`http://localhost:3000/events/${event.id}`, {
+            method: 'DELETE'
+          });
+
+          const result = await deleteResponse.json();
+          console.log(result);
+
+          fetchEvents();
+        } catch (err) {
+          console.error('Error deleting event:', err);
+        }
+      });
+
+      eventItem.appendChild(eventText);
+      eventItem.appendChild(deleteBtn);
       eventsListContainer.appendChild(eventItem);
     });
 
@@ -166,9 +192,57 @@ function hideUnhide() {                                            //Hide form
     }
 }
 
+async function deleteMovie(id) {
+  try {
+    const response = await fetch(`/events/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+    console.log('Delete response:', data);
+  } catch (error) {
+    console.error('Error deleting movie:', error);
+  }
+}
+
+function addMovieButtons() {
+  const movieItems = document.querySelectorAll('.MovieItem');
+
+  movieItems.forEach(item => {
+    if (!item.querySelector('.addToEventBtn')) {
+      const button = document.createElement('button');
+      button.textContent = "Add to Events";
+      button.className = "addToEventBtn";
+
+      const [namePart, datePart] = item.textContent.split(' - Release Date: ');
+      const movieData = {
+        name: namePart.trim(),
+        release: datePart.trim()
+      };
+
+      button.addEventListener('click', async () => {
+        const newEvent = await createEvent(movieData);
+        if (newEvent) {
+          alert(`"${movieData.name}" added to events!`);
+          fetchEvents();
+        }
+      });
+
+      item.appendChild(button);
+    }
+  });
+}
+
+addMovieButtons();
+
 
 document.getElementById('Showcreateeventform').addEventListener('click', hideUnhide);
 document.getElementById('createEventButton').addEventListener('click', handleCreateEvent);
 
 generateCalendar(new Date());
 fetchEvents();
+
+

@@ -114,3 +114,10 @@ li {
     font-size: 16px;
     cursor: pointer;
 }
+
+.delete-btn{
+    background-color: red;
+    margin-left: 10px;
+    font-size: 14px;
+    color: white;
+}
