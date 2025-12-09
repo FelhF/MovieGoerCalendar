@@ -236,6 +236,59 @@ function addMovieButtons() {
   });
 }
 
+async function fetchUpcomingMovies() {
+  const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+  const moviesContainer = document.querySelector('#MovieListContainer ul');
+
+  if (!apiKey) {
+    console.error('TMDB API key not found. Make sure it is set as VITE_TMDB_API_KEY in .env');
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=1`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch movies from TMDB');
+    }
+
+    const data = await response.json();
+    const movies = data.results;
+
+    moviesContainer.innerHTML = '';
+
+    movies.forEach(movie => {
+      const releaseDate = movie.release_date || 'N/A';
+      const li = document.createElement('li');
+      li.className = 'MovieItem';
+      li.textContent = `${movie.title} - Release Date: ${releaseDate}`;
+
+      const button = document.createElement('button');
+      button.textContent = "Add to Events";
+      button.className = "addToEventBtn";
+
+      const movieData = {
+        name: movie.title,
+        release: releaseDate
+      };
+
+      button.addEventListener('click', async () => {
+        const newEvent = await createEvent(movieData);
+        if (newEvent) {
+          alert(`"${movieData.name}" added to events!`);
+          fetchEvents();
+        }
+      });
+
+      li.appendChild(button);
+      moviesContainer.appendChild(li);
+    });
+
+  } catch (error) {
+    console.error('Error fetching TMDB movies:', error);
+  }
+}
+fetchUpcomingMovies();
+
 addMovieButtons();
 
 
