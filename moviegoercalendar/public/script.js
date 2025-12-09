@@ -245,5 +245,3 @@ document.getElementById('createEventButton').addEventListener('click', handleCre
 
 generateCalendar(new Date());
 fetchEvents();
-
-
